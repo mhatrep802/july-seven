@@ -184,9 +184,31 @@ const NeedPage = ({ setCurrentPage }) => {
               >
                 Home
               </button>
-              <div className="flex items-center space-x-2">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
-                <span className="text-red-400 font-bold">Crisis</span>
+              <div className="flex items-center space-x-6">
+                <a
+                  href="https://www.ipc.org/newsroom/press-releases/2022/ipc-survey-reveals-skills-gap-electronics-manufacturing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 text-slate-300 hover:text-yellow-400 transition-colors duration-200 group"
+                >
+                  <Building className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">IPC Skills Gap Report</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
+                </a>
+                <a
+                  href="https://www.globenewswire.com/en/news-release/2023/07/12/2703098/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-2 text-slate-300 hover:text-blue-400 transition-colors duration-200 group"
+                >
+                  <TrendingUp className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-medium">Market Growth Data</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
+                </a>
+                <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/30 rounded-full px-4 py-2">
+                  <AlertTriangle className="w-4 h-4 text-red-400" />
+                  <span className="text-red-400 font-bold text-sm">Crisis</span>
+                </div>
               </div>
             </div>
           </div>
@@ -217,10 +239,34 @@ const NeedPage = ({ setCurrentPage }) => {
 
           {/* Crisis Statistics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-            <StatCard icon={Users} number={10000} suffix="+" label="Unfilled PCB Jobs" color="red" />
-            <StatCard icon={Clock} number={6} label="Weeks Training in University" color="orange" />
-            <StatCard icon={TrendingUp} number={16} suffix="B+" label="Market Size by 2028" color="green" />
-            <StatCard icon={Building} number={75} suffix="%" label="Companies Struggling to Hire" color="yellow" />
+            <a
+              href="https://www.indeed.com/q-PCB-Design-jobs.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <StatCard icon={Users} number={10000} suffix="+" label="Unfilled PCB Jobs" color="red" />
+            </a>
+            <a
+              href="https://www.reddit.com/r/AskElectronics/comments/1iqph7q/my_university_doesnt_teach_pcb_design_so_i/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <StatCard icon={Clock} number={6} label="Weeks Training in University" color="orange" />
+            </a>
+            <a
+              href="https://www.globenewswire.com/en/news-release/2023/07/12/2703098/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <StatCard icon={TrendingUp} number={16} suffix="B+" label="Market Size by 2028" color="green" />
+            </a>
+            <a
+              href="https://www.ipc.org/newsroom/press-releases/2022/ipc-survey-reveals-skills-gap-electronics-manufacturing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <StatCard icon={Building} number={75} suffix="%" label="Companies Struggling to Hire" color="yellow" />
+            </a>
           </div>
         </div>
       </section>

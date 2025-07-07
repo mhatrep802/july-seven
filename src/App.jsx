@@ -1,5 +1,6 @@
 import HowItWorks from './pages/HowItWorks';
 import NeedPage from './pages/NeedPage';
+import DemoPage from './pages/DemoPage';
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { 
@@ -25,7 +26,7 @@ import {
 
 const TraceTutorWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [currentPage, setCurrentPage] = useState('main'); // 'main' or 'need'
+  const [currentPage, setCurrentPage] = useState('main'); // 'main', 'need', or 'demo'
 
   // Animated background circuit lines
   const CircuitLine = ({ delay = 0, top = '20%' }) => (
@@ -266,9 +267,15 @@ const TraceTutorWebsite = () => {
               >
                 Need
               </button>
+              <button
+                onClick={() => setCurrentPage('demo')}
+                className="text-slate-300 hover:text-green-400 transition-all duration-300 font-medium px-4 py-2 rounded-lg hover:bg-green-400/10"
+              >
+                Demo
+              </button>
               <Link
                 to="/how-it-works"
-                className="text-slate-300 hover:text-green-400 transition-all duration-300 font-medium px-4 py-2 rounded-lg hover:bg-green-400/10"
+                className="whitespace-nowrap text-slate-300 hover:text-green-400 transition-all duration-300 font-medium px-4 py-2 rounded-lg hover:bg-green-400/10"
               >
                 How It Works
               </Link>
@@ -516,6 +523,8 @@ const TraceTutorWebsite = () => {
         <p className="text-slate-400">© 2025 TraceTutor. Empowering future engineers.</p>
       </footer>
     </div>
+      ) : currentPage === 'demo' ? (
+        <DemoPage />
       ) : (
         <NeedPage setCurrentPage={setCurrentPage} />
       )}
