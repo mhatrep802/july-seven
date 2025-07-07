@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import {
   School,
@@ -304,21 +305,21 @@ const NeedPage = ({ setCurrentPage }) => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => setCurrentPage('main')}
+            <Link
+              to="/"
               className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <CheckCircle className="w-6 h-6 mr-2 group-hover:rotate-12 transition-transform" />
               See How TraceTutor Solves This
-            </button>
+            </Link>
             
-            <button
-              onClick={() => setCurrentPage('main')}
+            <Link
+              to="/"
               className="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-full font-semibold transition-all duration-300 hover:bg-white/20 hover:scale-105"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Main Page
-            </button>
+            </Link>
           </div>
         </div>
       </section>
