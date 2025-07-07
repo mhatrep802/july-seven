@@ -45,6 +45,37 @@ const DemoPage = () => {
     voltage: 4.97
   });
 
+  // AI Design Mentor state and handler
+  const [aiInput, setAiInput] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAskAI = async () => {
+    if (!aiInput) return;
+    setIsLoading(true);
+    setAiResponse('');
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'llama3-70b-8192',
+          messages: [{ role: 'user', content: aiInput }],
+        }),
+      });
+      const data = await response.json();
+      setAiResponse(data.choices?.[0]?.message?.content || 'No response');
+    } catch (error) {
+      console.error("Groq API error:", error);
+      setAiResponse('⚠️ Error retrieving AI response.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationPhase(prev => (prev + 1) % 4);
@@ -698,36 +729,39 @@ const DemoPage = () => {
               <div className="flex space-x-3">
                 <input
                   type="text"
+                  value={aiInput}
+                  onChange={(e) => setAiInput(e.target.value)}
                   placeholder="e.g. How do I minimize crosstalk in high-speed differential pairs?"
                   className="flex-1 p-4 rounded-xl bg-slate-800/50 border border-slate-600/50 text-white placeholder-slate-400 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
                 />
-                <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-600/30 transition-all">
-                  Ask AI
+                <button
+                  onClick={handleAskAI}
+                  disabled={isLoading}
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-purple-600/30 transition-all disabled:opacity-50"
+                >
+                  {isLoading ? 'Thinking...' : 'Ask AI'}
                 </button>
               </div>
             </div>
             
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-600/30">
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl">
-                  <MessageCircle className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-purple-300 font-bold mb-2 flex items-center">
-                    AI Design Expert
-                    <div className="ml-2 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            {aiResponse && (
+              <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-600/30 mt-6">
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl">
+                    <MessageCircle className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-slate-300 leading-relaxed">
-                    "For high-current power delivery, I recommend implementing a multi-layer power distribution network. Use 2oz copper with 35-mil traces for your main power rails, and add thermal vias every 5mm to improve heat dissipation. Consider using polygon pours with via stitching to reduce inductance and improve current density distribution."
-                  </div>
-                  <div className="mt-4 flex items-center space-x-4">
-                    <button className="text-sm text-purple-400 hover:text-purple-300 transition-colors">👍 Helpful</button>
-                    <button className="text-sm text-purple-400 hover:text-purple-300 transition-colors">💡 More Details</button>
-                    <button className="text-sm text-purple-400 hover:text-purple-300 transition-colors">📋 Apply Suggestion</button>
+                  <div className="flex-1">
+                    <div className="text-purple-300 font-bold mb-2 flex items-center">
+                      AI Design Expert
+                      <div className="ml-2 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <div className="text-slate-300 leading-relaxed whitespace-pre-line">
+                      {aiResponse}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             
             {/* Quick suggestions */}
             <div className="mt-6">
