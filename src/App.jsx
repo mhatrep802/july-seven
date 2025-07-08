@@ -12,6 +12,7 @@ import {
   BarChart3,
   TrendingUp,
   Mail,
+  RotateCcw,
   ExternalLink,
   School,
   BookOpen,
@@ -87,7 +88,7 @@ const TraceTutorWebsite = () => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [activeDropdown]);
-
+  
   // Enhanced Navigation Component
   const EnhancedNavigation = () => (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -310,26 +311,93 @@ const TraceTutorWebsite = () => {
   );
 
   // Team member card
-  const TeamMemberCard = ({ name, role, email, bio, skills }) => (
-    <div className="bg-white/5 backdrop-blur-lg border border-cyan-400/20 rounded-3xl p-8 text-center transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl hover:shadow-cyan-400/20">
-      <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-        <User className="w-12 h-12 text-white" />
+  const TeamMemberCard = ({ name, role, email, bio, skills, longMessage }) => {
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    const handleFlip = () => {
+      setIsFlipped(!isFlipped);
+    };
+
+    return (
+      <div className="relative w-full min-h-[500px] perspective-1000">
+        <div className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+          {/* Front Side */}
+          <div className="absolute inset-0 backface-hidden">
+            <div 
+              className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 min-h-[500px] h-full hover:bg-white/10 transition-all duration-300 hover:scale-105 cursor-pointer"
+              onClick={handleFlip}
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex-1">
+                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                    <span className="text-2xl font-bold text-white">{name.split(' ').map(n => n[0]).join('')}</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3 text-center">{name}</h3>
+                  <p className="text-blue-400 font-medium mb-4 text-center text-lg">{role}</p>
+                  <p className="text-slate-300 text-sm mb-6 leading-relaxed text-center max-w-md mx-auto">{bio}</p>
+                </div>
+                
+                <div className="mt-auto">
+                  <div className="flex flex-wrap gap-2 mb-6 justify-center">
+                    {skills.map((skill, index) => (
+                      <span key={index} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="flex justify-center space-x-3 mb-4">
+                    <a href={`mailto:${email}`} className="text-slate-400 hover:text-blue-400 transition-colors">
+                      <Mail className="w-5 h-5" />
+                    </a>
+                  </div>
+                  
+                  <div className="text-center">
+                    <span className="text-xs text-slate-500 italic">Click to read their story</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Back Side */}
+          <div className="absolute inset-0 backface-hidden rotate-y-180">
+            <div 
+              className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-lg border border-blue-400/30 rounded-2xl p-6 min-h-[500px] h-full cursor-pointer relative overflow-hidden"
+              onClick={handleFlip}
+            >
+              <div className="absolute top-4 right-4">
+                <RotateCcw className="w-5 h-5 text-blue-400" />
+              </div>
+              
+              <div className="h-full flex flex-col">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-white mb-1">{name}</h3>
+                  <p className="text-blue-400 text-sm font-medium">{role}</p>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400/30 scrollbar-track-transparent pr-2">
+                  <div className="text-slate-200 text-sm leading-relaxed space-y-3">
+                    {longMessage.split('\n').map((paragraph, index) => (
+                      paragraph.trim() && (
+                        <p key={index} className="text-justify">
+                          {paragraph.trim()}
+                        </p>
+                      )
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="text-center mt-4">
+                  <span className="text-xs text-slate-500 italic">Click to flip back</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{name}</h3>
-      <p className="text-cyan-400 font-medium mb-4">{role}</p>
-      <p className="text-slate-300 mb-4 leading-relaxed">{bio}</p>
-      <div className="flex flex-wrap gap-2 justify-center mb-4">
-        {skills.map((skill, index) => (
-          <span key={index} className="bg-cyan-400/10 text-cyan-400 px-3 py-1 rounded-full text-sm">
-            {skill}
-          </span>
-        ))}
-      </div>
-      <a href={`mailto:${email}`} className="text-purple-400 hover:text-cyan-400 transition-colors">
-        {email}
-      </a>
-    </div>
-  );
+    );
+  };
 
   // Testimonial component
   const TestimonialCard = ({ quote, author, role, company, rating = 5 }) => (
@@ -770,6 +838,53 @@ const TraceTutorWebsite = () => {
                 </div>
               </div>
 
+              {/* The Real Barriers */}
+              <div className="mb-20">
+                <div className="text-center mb-12">
+                  <div className="inline-flex items-center space-x-2 bg-orange-500/20 border border-orange-500/30 rounded-full px-6 py-3 mb-6">
+                    <AlertTriangle className="w-5 h-5 text-orange-400" />
+                    <span className="text-orange-400 font-bold text-sm uppercase tracking-wide">The Real Barriers</span>
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                    Why PCB Design Is So Hard to Learn
+                  </h3>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-gradient-to-br from-red-900/20 to-red-700/20 backdrop-blur-lg border border-red-400/30 rounded-2xl p-6 hover:bg-red-900/30 transition-all duration-300 hover:scale-105">
+                    <DollarSign className="w-10 h-10 mb-4 text-red-400" />
+                    <h4 className="text-xl font-bold text-red-400 mb-3">Cost Barriers</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Professional PCB software costs $1,000s. Hardware prototyping requires expensive equipment. Most students can't afford proper learning tools.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-orange-900/20 to-orange-700/20 backdrop-blur-lg border border-orange-400/30 rounded-2xl p-6 hover:bg-orange-900/30 transition-all duration-300 hover:scale-105">
+                    <BookOpen className="w-10 h-10 mb-4 text-orange-400" />
+                    <h4 className="text-xl font-bold text-orange-400 mb-3">Theory vs Practice Gap</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Textbooks teach circuit theory but skip PCB layout. YouTube tutorials lack depth. No bridge between academic knowledge and real-world design.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-yellow-900/20 to-yellow-700/20 backdrop-blur-lg border border-yellow-400/30 rounded-2xl p-6 hover:bg-yellow-900/30 transition-all duration-300 hover:scale-105">
+                    <Brain className="w-10 h-10 mb-4 text-yellow-400" />
+                    <h4 className="text-xl font-bold text-yellow-400 mb-3">No AI Personalization</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Everyone learns differently. Current resources are one-size-fits-all. No adaptive learning or personalized feedback for complex PCB concepts.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-700/20 backdrop-blur-lg border border-purple-400/30 rounded-2xl p-6 hover:bg-purple-900/30 transition-all duration-300 hover:scale-105">
+                    <Zap className="w-10 h-10 mb-4 text-purple-400" />
+                    <h4 className="text-xl font-bold text-purple-400 mb-3">No PCB-Specific AI</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      AI like ChatGPT can code instantly, but struggles with PCB design. No specialized AI tutor exists for hardware design, making learning painfully slow.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* Student Testimonials */}
               <div className="bg-gradient-to-r from-red-900/10 to-orange-900/10 rounded-3xl p-8 mb-16">
                 <div className="text-center mb-12">
@@ -1192,6 +1307,15 @@ const TraceTutorWebsite = () => {
                   email="mhatrepu@msu.edu"
                   bio="Electrical Engineering student passionate about bridging the gap between academic theory and industry practice in PCB design."
                   skills={['PCB Design', 'AI/ML', 'Educational Technology', 'Product Strategy']}
+                  longMessage={`I'm a double major in Computer and Electrical Engineering. That actually matters here, because the people who desperately need something like TraceTutor? They're electrical engineering students. They're people like me.
+
+          But here's the reality: most of them will never build something like this themselves. They're drowning in coursework, they don't have a software background, and honestly? They just want to learn PCB design without wanting to throw their laptop out the window. I've been exactly where they are. I still am in that position. I took a $1,200-valued PCB Design course made by the leading professionals (PCEA) and it all went over my head because we read out of an 800-page textbook.
+
+          What makes TraceTutor different isn't that we're some hotshot developers or seasoned educators. It's that we're confused students, who just happened to pick up the coding skills along the way to actually do something about it.
+
+          This whole thing started because I got frustrated with the resources out there. I kept thinking, "There has to be a better way to learn this stuff." Turns out, there wasn't. So we're building it.
+
+          This isn't just another project for our portfolio. It's personal. And that's exactly why we're the right people to make it happen.`}
                 />
                 <TeamMemberCard
                   name="Sharvayu Chavan"
@@ -1199,6 +1323,13 @@ const TraceTutorWebsite = () => {
                   email="chavansh@msu.edu"
                   bio="Computer Engineering student focused on developing innovative AI-powered learning platforms for technical education."
                   skills={['Full-Stack Development', 'AI Systems', 'UX Design', 'DevOps']}
+                  longMessage={`I come at this from the flip side of the table. As a double major in Computer and Biosystems Engineering, I research in labs where we develop PCBs for neural signal detection and AI for biodata analysis. Despite this, back when I first opened KiCad, I still couldn't tell a netlist from a footprint. I struggled in electrical engineering classes during the day, but made energy harvesting circuits at night, only because of the difference between the theory we're taught in class and the skills we need practically.
+
+          I'm the kind of person who's supposed to "get this stuff," but even with a background, breaking into PCB and Electrical Engineering design feels like a brick wall. Every tutorial assumes you already know everything, and the few that don't are just blatantly terrible at explaining. More importantly? A lot of what we learn is irrelevant to what we need.
+
+          And that's the real gap: it's not a lack of resources, it's a lack of guidance. So we thought, what the heck? Let's guide ourselves.
+
+          Building TraceTutor isn't just about making learning easier. It's about lowering the barrier for developers, enthusiasts, students, or anyone really who just wants to make this part of the world open-source too. No matter who you are, or what background you have, we want to build a system that takes each step with you.`}
                 />
               </div>
 
@@ -1210,6 +1341,30 @@ const TraceTutorWebsite = () => {
                 </p>
               </div>
             </div>
+
+            <style jsx>{`
+              .perspective-1000 {
+                perspective: 1000px;
+              }
+              .transform-style-preserve-3d {
+                transform-style: preserve-3d;
+              }
+              .backface-hidden {
+                backface-visibility: hidden;
+              }
+              .rotate-y-180 {
+                transform: rotateY(180deg);
+              }
+              .scrollbar-thin {
+                scrollbar-width: thin;
+              }
+              .scrollbar-thumb-blue-400\/30::-webkit-scrollbar-thumb {
+                background-color: rgba(96, 165, 250, 0.3);
+              }
+              .scrollbar-track-transparent::-webkit-scrollbar-track {
+                background-color: transparent;
+              }
+            `}</style>
           </section>
 
           {/* Contact Section */}
